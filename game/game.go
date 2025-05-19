@@ -17,8 +17,8 @@ type Game struct {
 	meteors []*Meteor
 	stars   []*Star
 
-	meteorSpawTimer *Timer
 	starSpawTimer   *Timer
+	meteorSpawTimer *Timer
 }
 
 func NewGame() *Game {
