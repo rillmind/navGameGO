@@ -11,7 +11,6 @@ import (
 
 type Game struct {
 	score int
-	text  string
 
 	player  *Player
 	lasers  []*Laser
