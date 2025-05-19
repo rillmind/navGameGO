@@ -15,13 +15,16 @@ type Game struct {
 	player  *Player
 	lasers  []*Laser
 	meteors []*Meteor
+	stars   []*Star
 
 	meteorSpawTimer *Timer
+	starSpawTimer   *Timer
 }
 
 func NewGame() *Game {
 	g := &Game{
 		meteorSpawTimer: NewTimer(24),
+		starSpawTimer:   NewTimer(28),
 	}
 	player := NewPlayer(g)
 	g.player = player
@@ -65,6 +68,19 @@ func (g *Game) Update() error {
 		}
 	}
 
+	g.starSpawTimer.Update()
+
+	if g.starSpawTimer.IsReady() {
+		g.starSpawTimer.Reset()
+
+		s := NewStar()
+		g.stars = append(g.stars, s)
+	}
+
+	for _, s := range g.stars {
+		s.Update()
+	}
+
 	return nil
 }
 
@@ -77,6 +93,10 @@ func (g *Game) Draw(screen *ebiten.Image) {
 
 	for _, m := range g.meteors {
 		m.Draw(screen)
+	}
+
+	for _, s := range g.stars {
+		s.Draw(screen)
 	}
 
 	text.Draw(screen, fmt.Sprintf("Pontos: %d", g.score), assets.FontUi, 20, 100, color.White)
@@ -94,6 +114,7 @@ func (g *Game) Reset() {
 	g.player = NewPlayer(g)
 	g.meteors = nil
 	g.lasers = nil
+	g.stars = nil
 	g.meteorSpawTimer.Reset()
 	g.score = 0
 }
